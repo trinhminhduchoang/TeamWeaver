@@ -1,0 +1,38 @@
+/* TeamWeaver App Styles */
+
+.teamweaver-app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Base button and interactive resets */
+button {
+  font-family: inherit;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-neon-lime);
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.15); }
+  40% { transform: scale(1); }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.heart-beat-anim {
+  animation: heartBeat 1.2s infinite ease-in-out;
+}
+
+/* Card drag styling */
+.swipe-card-wrapper {
+  touch-action: none;
+  will-change: transform, opacity;
+}

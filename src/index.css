@@ -1,0 +1,208 @@
+/* TeamWeaver Design System */
+/* Balanced & Reduced Contrast Color Palette for Eye Comfort */
+
+:root {
+  /* Brand Core Accents */
+  --color-neon-lime: #BCEE26;
+  --color-neon-lime-soft: rgba(188, 238, 38, 0.15);
+  --color-soft-violet: #8C64FF;
+  --color-soft-violet-subtle: rgba(140, 100, 255, 0.15);
+
+  /* Reduced Contrast Dark Theme Palette (Gentle Slate Charcoal, No Harsh Pure Blacks) */
+  --color-dark-bg: #181924;
+  --color-dark-bg-subtle: #14151E;
+  --color-card-dark: #222432;
+  --color-card-dark-hover: #292B3C;
+  --color-card-dark-raised: #2C2F42;
+  --color-text-dark-primary: #E2E5EE;     /* Softened off-white to eliminate glare */
+  --color-text-dark-secondary: #9AA3B8;   /* Balanced muted secondary text */
+  --color-text-dark-tertiary: #6E768E;    /* Subtle captions */
+  --color-border-dark: rgba(255, 255, 255, 0.075);
+  --color-border-dark-highlight: rgba(188, 238, 38, 0.22);
+
+  /* Reduced Contrast Light Theme Palette (Soft Neutral Slate, No Harsh Stark Contrasts) */
+  --color-light-bg: #F4F6F9;
+  --color-light-bg-subtle: #ECEEF4;
+  --color-card-light: #FFFFFF;
+  --color-card-light-hover: #FAFBFC;
+  --color-card-light-raised: #FFFFFF;
+  --color-text-light-primary: #2D323E;    /* Softened dark slate instead of pure black */
+  --color-text-light-secondary: #647087;  /* Readable calm secondary text */
+  --color-text-light-tertiary: #8C96AB;   /* Subtle captions */
+  --color-border-light: rgba(0, 0, 0, 0.06);
+  --color-border-light-highlight: rgba(109, 40, 217, 0.18);
+
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Easing and Transitions */
+  --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 0.38s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+body.theme-dark {
+  background-color: var(--color-dark-bg);
+  color: var(--color-text-dark-primary);
+}
+
+body.theme-light {
+  background-color: var(--color-light-bg);
+  color: var(--color-text-light-primary);
+}
+
+/* Custom Smooth Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 100, 255, 0.25);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(188, 238, 38, 0.45);
+}
+
+/* Tab / Page Switch Transition */
+@keyframes tabFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tab-view-container {
+  animation: tabFadeSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+  width: 100%;
+}
+
+/* General Fade In for Modals & Dialogs */
+@keyframes fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUpModal {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-backdrop-anim {
+  animation: fadeInBackdrop 0.22s ease-out forwards;
+}
+
+.modal-content-anim {
+  animation: scaleUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Interactive Button Physics */
+.btn-interactive {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn-interactive:hover {
+  transform: translateY(-1.5px);
+}
+
+.btn-interactive:active {
+  transform: scale(0.96);
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-anim {
+  animation: spin 1s linear infinite;
+}
+
+/* =========================================================================
+   RESPONSIVE & MOBILE DESIGN ADJUSTMENTS (Requirement 4)
+   ========================================================================= */
+
+@media (max-width: 768px) {
+  /* Hide Desktop Nav on Mobile */
+  .desktop-nav-tabs {
+    display: none !important;
+  }
+
+  /* Show Bottom Navigation Bar on Mobile */
+  .mobile-bottom-nav-bar {
+    display: flex !important;
+  }
+
+  /* Padding for main app body to accommodate bottom navbar */
+  .tab-view-container {
+    padding-bottom: 74px !important;
+  }
+
+  .top-navbar-root {
+    padding: 10px 14px !important;
+  }
+
+  /* Chat view full height on mobile */
+  .chat-view-container {
+    height: calc(100vh - 145px) !important;
+    min-height: 480px !important;
+    border-radius: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .db-btn-text {
+    display: none !important;
+  }
+
+  .top-navbar-root {
+    padding: 8px 12px !important;
+  }
+
+  /* Full screen touch modal on very small devices */
+  .modal-responsive-inner {
+    width: 100% !important;
+    max-height: 95vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+  }
+}

@@ -84,6 +84,21 @@ export const mapProfileToDb = (profile) => {
   };
 };
 
+const getDemoStudentProfiles = () =>
+  DEFAULT_ACCOUNTS
+    .filter((account) => account.role === 'student')
+    .map((account) => {
+      const profile = { ...account };
+      delete profile.password;
+      return profile;
+    });
+
+const mergeDemoStudentProfiles = (students) => {
+  const profilesById = new Map(getDemoStudentProfiles().map((profile) => [profile.id, profile]));
+  students.forEach((student) => profilesById.set(student.id, student));
+  return [...profilesById.values()];
+};
+
 // 1. Fetch all student profiles
 export const fetchStudents = async () => {
   const client = getSupabaseClient();
@@ -95,7 +110,7 @@ export const fetchStudents = async () => {
         .order('created_at', { ascending: false });
 
       if (!error && data) {
-        return data.map(mapProfileFromDb);
+        return mergeDemoStudentProfiles(data.map(mapProfileFromDb));
       }
     } catch (err) {
       console.warn('Could not fetch profiles from Supabase, falling back to local data:', err);
@@ -104,7 +119,7 @@ export const fetchStudents = async () => {
 
   // Fallback to local storage or clean initial state
   const saved = localStorage.getItem('tw_students');
-  return saved ? JSON.parse(saved) : INITIAL_STUDENTS;
+  return mergeDemoStudentProfiles(saved ? JSON.parse(saved) : INITIAL_STUDENTS);
 };
 
 // 2. Save or update a profile
@@ -451,7 +466,194 @@ export const authSignUp = async ({ email, password, role = 'student', profileDat
   return newProfile;
 };
 
+// Default accounts for immediate testing
+export const DEFAULT_ACCOUNTS = [
+  {
+    id: 'dev_master_user',
+    role: 'developer',
+    name: 'Kỹ Sư Trưởng (Admin)',
+    email: 'admin@teamweaver.dev',
+    password: 'admin',
+    university: 'TeamWeaver Core Engineering',
+    uniShort: 'DEV',
+    studentId: 'DEV_ROOT',
+    major: 'System Architecture & Dev',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
+    gpa: 4.0,
+    maxGpa: 4.0,
+    gpaVerified: true,
+    gpaConsentAgreed: true,
+    skills: ['React', 'Python', 'Supabase', 'Cloud / DevOps'],
+    primarySkillCategory: 'Coding & Tech',
+    expectation: 'High Distinction (HD)',
+    targetScore: 'HD',
+    availability: '15+ hours / week',
+    scheduleDetail: 'Toàn thời gian (Developer Mode)',
+    workingStyle: 'System Architect',
+    workingStyleTraits: ['Architecture', 'DevOps', 'Security'],
+    awards: ['TeamWeaver Founder / Lead Dev'],
+    radarScores: { skills: 98, schedule: 95, style: 92, goals: 99 },
+    creditScore: 100,
+    rating: 5.0,
+    reviewCount: 1,
+    completedProjectsCount: 5,
+    completionRate: 100,
+    likesGiven: [],
+    isSeeking: true
+  },
+  {
+    id: 'student_tester_user',
+    role: 'student',
+    name: 'Nguyễn Văn A',
+    email: 'student@hust.edu.vn',
+    password: '123456',
+    university: 'Đại học Bách Khoa Hà Nội (HUST)',
+    uniShort: 'HUST',
+    studentId: '20231234',
+    major: 'Khoa học máy tính',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80',
+    gpa: 3.85,
+    maxGpa: 4.0,
+    gpaVerified: true,
+    gpaConsentAgreed: true,
+    skills: ['React', 'Python', 'UI/UX Design'],
+    primarySkillCategory: 'Coding & Tech',
+    expectation: 'High Distinction (HD)',
+    targetScore: 'HD',
+    availability: '8 hours / week',
+    scheduleDetail: 'Tối thứ 2 - 6 và cuối tuần',
+    workingStyle: 'Proactive Communicator',
+    workingStyleTraits: ['Agile Sprints', 'Giao tiếp chủ động'],
+    awards: ['Học bổng Khuyến khích Học tập'],
+    radarScores: { skills: 88, schedule: 85, style: 85, goals: 90 },
+    creditScore: 98,
+    rating: 5.0,
+    reviewCount: 0,
+    completedProjectsCount: 2,
+    completionRate: 100,
+    likesGiven: ['student_design_user', 'student_marketing_user', 'student_business_user'],
+    isSeeking: true
+  },
+  {
+    id: 'student_design_user',
+    role: 'student',
+    name: 'Trần Minh Anh',
+    email: 'minhanh@hcmut.edu.vn',
+    password: '123456',
+    university: 'Đại học Bách Khoa TP.HCM (HCMUT)',
+    uniShort: 'HCMUT',
+    studentId: '20234567',
+    major: 'Thiết kế giao diện người dùng',
+    avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=600&q=80',
+    gpa: 3.72,
+    maxGpa: 4.0,
+    gpaVerified: true,
+    gpaConsentAgreed: true,
+    skills: ['Figma', 'UI/UX Design', 'Graphic Design', 'React'],
+    primarySkillCategory: 'Design & UI/UX',
+    expectation: 'High Distinction (HD)',
+    targetScore: 'HD',
+    availability: '10 hours / week',
+    scheduleDetail: 'Buổi tối các ngày trong tuần',
+    workingStyle: 'Collaborative Designer',
+    workingStyleTraits: ['Tư duy sáng tạo', 'Lắng nghe phản hồi'],
+    awards: ['Giải Nhì thiết kế sản phẩm sinh viên'],
+    bio: 'Mình thích biến những ý tưởng khó thành trải nghiệm dễ dùng. Đang tìm đồng đội làm sản phẩm công nghệ.',
+    radarScores: { skills: 92, schedule: 86, style: 94, goals: 89 },
+    creditScore: 96,
+    rating: 4.9,
+    reviewCount: 3,
+    completedProjectsCount: 4,
+    completionRate: 100,
+    likesGiven: ['student_tester_user', 'student_marketing_user', 'student_business_user'],
+    isSeeking: true
+  },
+  {
+    id: 'student_marketing_user',
+    role: 'student',
+    name: 'Lê Hoàng Nam',
+    email: 'hoangnam@ftu.edu.vn',
+    password: '123456',
+    university: 'Đại học Ngoại Thương (FTU)',
+    uniShort: 'FTU',
+    studentId: '20235678',
+    major: 'Marketing số',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+    gpa: 3.68,
+    maxGpa: 4.0,
+    gpaVerified: true,
+    gpaConsentAgreed: true,
+    skills: ['Digital Marketing', 'Market Research', 'Data Analysis', 'Content Creation'],
+    primarySkillCategory: 'Marketing & Growth',
+    expectation: 'Distinction (D)',
+    targetScore: 'D',
+    availability: '8 hours / week',
+    scheduleDetail: 'Cuối tuần và tối thứ 3, 5',
+    workingStyle: 'Data-driven Collaborator',
+    workingStyleTraits: ['Chủ động', 'Làm việc dựa trên dữ liệu'],
+    awards: ['Top 5 cuộc thi Marketing sinh viên'],
+    bio: 'Mình có thể phụ trách nghiên cứu người dùng và đưa sản phẩm đến đúng đối tượng.',
+    radarScores: { skills: 90, schedule: 84, style: 91, goals: 88 },
+    creditScore: 94,
+    rating: 4.8,
+    reviewCount: 2,
+    completedProjectsCount: 3,
+    completionRate: 96,
+    likesGiven: ['student_tester_user', 'student_design_user', 'student_business_user'],
+    isSeeking: true
+  },
+  {
+    id: 'student_business_user',
+    role: 'student',
+    name: 'Phạm Thu Hà',
+    email: 'thuha@neu.edu.vn',
+    password: '123456',
+    university: 'Đại học Kinh Tế Quốc Dân (NEU)',
+    uniShort: 'NEU',
+    studentId: '20236789',
+    major: 'Tài chính và phân tích kinh doanh',
+    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80',
+    gpa: 3.81,
+    maxGpa: 4.0,
+    gpaVerified: true,
+    gpaConsentAgreed: true,
+    skills: ['Financial Modeling', 'Business Strategy', 'Pitching & Presentation', 'Data Analysis'],
+    primarySkillCategory: 'Finance & Business',
+    expectation: 'High Distinction (HD)',
+    targetScore: 'HD',
+    availability: '9 hours / week',
+    scheduleDetail: 'Linh hoạt sau 18:00',
+    workingStyle: 'Organized Strategist',
+    workingStyleTraits: ['Lập kế hoạch rõ ràng', 'Giao tiếp cởi mở'],
+    awards: ['Học bổng khuyến khích học tập'],
+    bio: 'Mình muốn cùng xây dựng một sản phẩm có mô hình kinh doanh thực tế và tác động tích cực.',
+    radarScores: { skills: 91, schedule: 88, style: 90, goals: 95 },
+    creditScore: 97,
+    rating: 5.0,
+    reviewCount: 2,
+    completedProjectsCount: 3,
+    completionRate: 100,
+    likesGiven: ['student_tester_user', 'student_design_user', 'student_marketing_user'],
+    isSeeking: true
+  }
+];
+
 export const authSignIn = async (email, password) => {
+  const cleanEmail = email.trim().toLowerCase();
+
+  // Check default demo accounts first
+  const defaultAcc = DEFAULT_ACCOUNTS.find(
+    (a) => a.email.toLowerCase() === cleanEmail && a.password === password
+  );
+
+  if (defaultAcc) {
+    const userToSave = { ...defaultAcc };
+    delete userToSave.password;
+    saveProfile(userToSave);
+    localStorage.setItem('tw_current_user', JSON.stringify(userToSave));
+    return userToSave;
+  }
+
   const client = getSupabaseClient();
   if (client && isSupabaseConfigured()) {
     const { data, error } = await client.auth.signInWithPassword({
@@ -479,7 +681,7 @@ export const authSignIn = async (email, password) => {
   const savedCreds = localStorage.getItem('tw_auth_credentials');
   const credentialsList = savedCreds ? JSON.parse(savedCreds) : [];
   const matchedCred = credentialsList.find(
-    (c) => c.email.toLowerCase() === email.trim().toLowerCase() && c.password === password
+    (c) => c.email.toLowerCase() === cleanEmail && c.password === password
   );
 
   if (!matchedCred && credentialsList.length > 0) {
@@ -488,7 +690,7 @@ export const authSignIn = async (email, password) => {
 
   const savedStudents = localStorage.getItem('tw_students');
   const students = savedStudents ? JSON.parse(savedStudents) : [];
-  const found = students.find((s) => s.email?.toLowerCase() === email.trim().toLowerCase());
+  const found = students.find((s) => s.email?.toLowerCase() === cleanEmail);
 
   if (found) {
     localStorage.setItem('tw_current_user', JSON.stringify(found));
@@ -496,7 +698,6 @@ export const authSignIn = async (email, password) => {
   }
 
   if (matchedCred) {
-    // Recreate profile if missing from students list
     const fallbackUser = {
       id: matchedCred.id,
       role: matchedCred.role || 'student',

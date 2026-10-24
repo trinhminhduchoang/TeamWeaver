@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { UNIVERSITIES, ALL_SKILLS } from '../data/mockData';
-import { authSignIn, authSignUp } from '../services/dataService';
+import { authSignIn, authSignUp, DEFAULT_ACCOUNTS } from '../services/dataService';
 
 export const AuthView = ({
   onAuthSuccess,
@@ -339,6 +339,61 @@ export const AuthView = ({
                     }}
                   />
                   <Lock size={16} color={isDark ? '#94A3B8' : '#64748B'} style={{ position: 'absolute', top: '13px', left: '12px' }} />
+                </div>
+              </div>
+
+              {/* Quick Fill Default Accounts Strip */}
+              <div
+                style={{
+                  background: isDark ? 'rgba(255, 255, 255, 0.04)' : '#F8FAFC',
+                  border: isDark ? '1px dashed rgba(255, 255, 255, 0.12)' : '1px dashed #CBD5E1',
+                  borderRadius: '14px',
+                  padding: '10px 12px',
+                  marginTop: '4px'
+                }}
+              >
+                <div style={{ fontSize: '11px', fontWeight: 700, color: isDark ? '#94A3B8' : '#64748B', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Sparkles size={12} color="#BCEE26" />
+                  <span>Tài khoản có sẵn để bạn vào thử ngay:</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                  {DEFAULT_ACCOUNTS.map((account) => {
+                    const isDeveloper = account.role === 'developer';
+                    const accountColor = isDeveloper
+                      ? (isDark ? '#BCEE26' : '#15803D')
+                      : (isDark ? '#C4B5FD' : '#6D28D9');
+
+                    return (
+                      <button
+                        key={account.id}
+                        type="button"
+                        onClick={() => {
+                          setEmail(account.email);
+                          setPassword(account.password);
+                        }}
+                        className="btn-interactive"
+                        style={{
+                          padding: '7px 8px',
+                          borderRadius: '8px',
+                          background: isDeveloper
+                            ? (isDark ? 'rgba(188, 238, 38, 0.12)' : '#F0FDF4')
+                            : (isDark ? 'rgba(140, 100, 255, 0.12)' : '#F5F3FF'),
+                          border: isDeveloper
+                            ? (isDark ? '1px solid rgba(188, 238, 38, 0.3)' : '1px solid #BBF7D0')
+                            : (isDark ? '1px solid rgba(140, 100, 255, 0.3)' : '1px solid #DDD6FE'),
+                          color: accountColor,
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          textAlign: 'center'
+                        }}
+                      >
+                        {isDeveloper ? '🛠️' : '🎓'} {account.name}
+                        <div style={{ fontSize: '9.5px', opacity: 0.8, fontWeight: 500 }}>{account.email}</div>
+                        <div style={{ fontSize: '9px', opacity: 0.7, fontWeight: 500 }}>Mật khẩu: {account.password}</div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </>
@@ -715,4 +770,3 @@ export const AuthView = ({
 };
 
 export default AuthView;
-
